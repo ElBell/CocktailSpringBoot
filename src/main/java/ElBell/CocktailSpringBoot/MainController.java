@@ -17,13 +17,8 @@ public class MainController {
     @GetMapping("/drinks")
     public @ResponseBody
     Iterable<Drink> getAllDrinks() {
-        // This returns a JSON or XML with the users
+        // This returns a JSON with the drinks
         return drinkRepository.findAll();
-    }
-
-    @PostMapping("/drinks")
-    public Drink saveDrink(@Valid @RequestBody Drink drink) {
-        return drinkRepository.save(drink);
     }
 
     @GetMapping("/anything")

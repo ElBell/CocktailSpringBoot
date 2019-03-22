@@ -1,11 +1,16 @@
 package ElBell.CocktailSpringBoot;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
+import com.jayway.jsonpath.spi.mapper.MappingException;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -25,13 +29,12 @@ import org.springframework.stereotype.Component;
 public class CocktailsFetcher {
     @Autowired
     private DrinkRepository drinkRepository;
-    private static Bar bar = Bar.getInstance();
+    private List<DrinkReference> referenceList = new ArrayList<>();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     //private static MainController mainController = new MainController();
 
     private static void initJsonConfig() {
         Configuration.setDefaults(new Configuration.Defaults() {
-
             private final JsonProvider jsonProvider = new JacksonJsonProvider();
             private final MappingProvider mappingProvider = new JacksonMappingProvider();
 
@@ -52,11 +55,12 @@ public class CocktailsFetcher {
         });
     }
 
-    @EventListener
+    //@EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
         initJsonConfig();
-        fetchOrdinaryDrinks();
-        fetchCocktails();
+        fetchListOfOrdinaryDrinks();
+        fectchListOfCocktails();
+        fetchFullDrinks();
         saveAllDrinks();
     }
 
@@ -67,17 +71,40 @@ public class CocktailsFetcher {
         }
     }
 
-    public void fetchCocktails() {
+    public void fectchListOfCocktails() {
         String raw = fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail");
-        Drink[] drinks = JsonPath.parse(raw).read("$.drinks", Drink[].class);
-        Bar.addDrinks(drinks);
+        DrinkReference[] drinks = JsonPath.parse(raw).read("$.drinks", DrinkReference[].class);
+        referenceList.addAll(Arrays.asList(drinks));
     }
 
-    public void fetchOrdinaryDrinks() {
+    public void fetchListOfOrdinaryDrinks() {
         String raw = fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Ordinary_Drink");
-        Drink[] drinks = JsonPath.parse(raw).read("$.drinks", Drink[].class);
-        Bar.addDrinks(drinks);
+        DrinkReference[] drinks = JsonPath.parse(raw).read("$.drinks", DrinkReference[].class);
+        referenceList.addAll(Arrays.asList(drinks));
     }
+
+    public void fetchFullDrinks() {
+        for (DrinkReference reference : referenceList) {
+            String raw = fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=" + reference.getId());
+            try {
+                Bar.addDrink(JsonPath.parse(raw).read("$.drinks[0]", Drink.class));
+            } catch (IllegalArgumentException | MappingException e) {
+                System.out.println(raw);
+                //If something goes wrong, print the offending json
+            }
+        }
+    }
+
+    public void trialDrink() {
+        String raw =  fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=17266");
+        System.out.println(JsonPath.parse(raw).read( "$.drinks[0]", Drink.class));
+    }
+
+//    public static void main(String[] args) {
+//        initJsonConfig();
+//        CocktailsFetcher cocktailsFetcher = new CocktailsFetcher();
+//        cocktailsFetcher.fetchFullDrinks();
+//    }
 
     public void fetchGlasses() {
         String raw = fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list");

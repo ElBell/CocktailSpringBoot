@@ -37,16 +37,16 @@ public class Bar {
         return drinks;
     }
 
-    public static void addDrink(String name, URL url, Long id) {
-        Drink drink = new Drink(name, url, id);
-        drinks.add(drink);
-    }
+//    public static void addDrink(String strDrink, URL url, Long id) {
+//        Drink drink = new Drink(strDrink, url, id);
+//        drinks.add(drink);
+//    }
 
     public static void addDrinks(Drink[] newDrinks) {
         drinks.addAll(Arrays.asList(newDrinks));
     }
 
-
+    public static void addDrink(Drink newDrink) { drinks.add(newDrink); }
     public static void addCategories(String[] newCategories) {
         categories.addAll(Arrays.asList(newCategories));
     }
