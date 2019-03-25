@@ -1,14 +1,10 @@
 package ElBell.CocktailSpringBoot;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.MappingException;
-import org.hibernate.annotations.SortComparator;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import java.net.URL;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -22,13 +18,14 @@ public class Drink implements Comparable<Drink> {
     @Id
     private Long id;
     private String name;
-    private URL thumb;
+    private URL image;
     private boolean alcoholic;
-    //private Map<String, String> ingredients;
     private String glass;
-    private URL glassImage;
     @Column(columnDefinition = "LONGBLOB")
     private String instructions;
+    @OneToMany(mappedBy = "drink")
+    @MapKey(name = "ingredient")
+    private Map<String, String> ingredients;
 
 
     /*public Drink(CustomType custom) {
@@ -47,8 +44,8 @@ public class Drink implements Comparable<Drink> {
         return id;
     }
 
-    public URL getThumb() {
-        return thumb;
+    public URL getImage() {
+        return image;
     }
 
     public boolean isAlcoholic() {
@@ -63,6 +60,14 @@ public class Drink implements Comparable<Drink> {
         return instructions;
     }
 
+    public Map<String, String> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(Map<String, String> ingredients) {
+        this.ingredients = ingredients;
+    }
+
     public int compareTo(Drink drink) {
         return getName().compareTo(drink.getName());
     }
@@ -70,16 +75,14 @@ public class Drink implements Comparable<Drink> {
 
 //    private Long id;
 //    private String name;
-//    private URL thumb;
+//    private URL image;
 //    private boolean alcoholic;
 //    private Map<String, Float> ingredients;
 //    private String glass;
 //    private String instructions;
 
-
-
     public Drink(@JsonProperty("strDrink") String name,
-                     @JsonProperty("strDrinkThumb") URL thumb,
+                     @JsonProperty("strDrinkThumb") URL image,
                      @JsonProperty("idDrink") Long id,
                      @JsonProperty("strAlcoholic") String alcoholic,
                      @JsonProperty("strGlass") String glass,
@@ -116,14 +119,14 @@ public class Drink implements Comparable<Drink> {
                      @JsonProperty("strMeasure15") String strMeasure15)
     {
         this.name = name;
-        this.thumb = thumb;
+        this.image = image;
         this.id = id;
         this.alcoholic = alcoholic.equals("Alcoholic");
         this.glass = glass;
 //        if (instructions.length() < 65535) {
             this.instructions = instructions;
         //}
-        Map<String, String> ingredients = new TreeMap<>();
+        ingredients = new TreeMap<>();
         try {
             ingredients.put(strIngredient1, strMeasure1);
             ingredients.put(strIngredient2, strMeasure2);
@@ -170,7 +173,7 @@ public class Drink implements Comparable<Drink> {
         return "FullDrink{" +
                 "id=" + id + "\n" +
                 ", name='" + name + '\'' +"\n" +
-                ", thumb=" + thumb +"\n" +
+                ", image=" + image +"\n" +
                 ", alcoholic=" + alcoholic +"\n" +
                 //", ingredients=" + ingredients +"\n" +
                 ", glass='" + glass + '\'' +"\n" +
