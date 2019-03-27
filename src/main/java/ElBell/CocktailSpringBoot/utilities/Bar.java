@@ -1,8 +1,9 @@
 //sudo mysql --password
 //Opensaysme!
-package ElBell.CocktailSpringBoot;
+package ElBell.CocktailSpringBoot.utilities;
 
-import java.net.URL;
+import ElBell.CocktailSpringBoot.entities.Drink;
+
 import java.util.*;
 
 //

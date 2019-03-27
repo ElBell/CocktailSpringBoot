@@ -1,10 +1,8 @@
-package ElBell.CocktailSpringBoot;
+package ElBell.CocktailSpringBoot.utilities;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import ElBell.CocktailSpringBoot.repositories.DrinkRepository;
+import ElBell.CocktailSpringBoot.entities.Drink;
 import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
@@ -27,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CocktailsFetcher {
+
     @Autowired
     private DrinkRepository drinkRepository;
     private List<DrinkReference> referenceList = new ArrayList<>();
@@ -55,11 +54,11 @@ public class CocktailsFetcher {
         });
     }
 
-    //@EventListener
+    @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
         initJsonConfig();
         fetchListOfOrdinaryDrinks();
-        fectchListOfCocktails();
+        fetchListOfCocktails();
         fetchFullDrinks();
         saveAllDrinks();
     }
@@ -67,11 +66,10 @@ public class CocktailsFetcher {
     private void saveAllDrinks() {
         for(Drink drink : Bar.getDrinks()) {
             drinkRepository.save(drink);
-            Bar.addToMap(drink.getId(), drink.getName());
         }
     }
 
-    public void fectchListOfCocktails() {
+    public void fetchListOfCocktails() {
         String raw = fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail");
         DrinkReference[] drinks = JsonPath.parse(raw).read("$.drinks", DrinkReference[].class);
         referenceList.addAll(Arrays.asList(drinks));

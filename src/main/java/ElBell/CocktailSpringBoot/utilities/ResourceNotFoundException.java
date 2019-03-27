@@ -1,4 +1,4 @@
-package ElBell.CocktailSpringBoot;
+package ElBell.CocktailSpringBoot.utilities;
 
 public class ResourceNotFoundException extends RuntimeException {
     private String resourceName;
