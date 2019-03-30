@@ -11,7 +11,6 @@ import java.util.TreeSet;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "cocktails")
 public class Drink implements Comparable<Drink> {
 
     @Id
@@ -23,9 +22,8 @@ public class Drink implements Comparable<Drink> {
     private String instructions;
     @OneToMany(mappedBy = "contain_drink", cascade = CascadeType.ALL)
     private Set<Ingredient> ingredients;
-    private String glass;
-//    @ManyToOne
-//    private Glass glass;
+    @ManyToOne(cascade=CascadeType.ALL)
+    private Glass glass;
 
     public Drink() {
     }
@@ -71,8 +69,7 @@ public class Drink implements Comparable<Drink> {
         this.image = image;
         this.id = id;
         this.alcoholic = alcoholic == null || alcoholic.equals("Alcoholic");
-        this.glass = glass;
-        //this.glass = Glass.getGlass(glass);
+        this.glass = Glass.getGlass(glass);
         this.instructions = instructions;
         ingredients = new TreeSet<>();
         try {
@@ -98,6 +95,8 @@ public class Drink implements Comparable<Drink> {
             //Drink that's affected is printed to visually ensure it entered correctly.
         } catch (OptimisticLockException e) {
             System.out.println(this);
+        } catch (Exception e) {
+            System.out.println(this);
         }
         this.ingredients.forEach(x -> x.setContain_drink(this));
     }
@@ -118,8 +117,12 @@ public class Drink implements Comparable<Drink> {
         return alcoholic;
     }
 
-    public String getGlass() {
+    public Glass getGlass() {
         return glass;
+    }
+
+    public void setGlass(Glass glass) {
+        this.glass = glass;
     }
 
     public String getInstructions() {
@@ -146,9 +149,6 @@ public class Drink implements Comparable<Drink> {
         this.alcoholic = alcoholic;
     }
 
-    public void setGlass(String glass) {
-        this.glass = glass;
-    }
 
     public void setInstructions(String instructions) {
         this.instructions = instructions;

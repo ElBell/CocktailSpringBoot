@@ -32,12 +32,7 @@ public class Ingredient implements Comparable<Ingredient>{
 
     }
     private double parseMeasurement(String measurement) throws NumberFormatException{
-        //try {
             return parseNumber(measurement) * getConversionRate(measurement);
-//        } catch (NumberFormatException e) {
-//            System.out.println(measurement);
-//        }
-//        return 0;
     }
 
     private double getConversionRate(String inputMeasurement) throws NumberFormatException{
@@ -77,11 +72,7 @@ public class Ingredient implements Comparable<Ingredient>{
             return getIngredientSize();
         }
         else {
-//            System.out.println("---------------------------------------");
-//            System.out.println(measurement);
-//            throw new OptimisticLockException();
             return 0;
-            //throw new NumberFormatException();
         }
     }
 
@@ -108,8 +99,6 @@ public class Ingredient implements Comparable<Ingredient>{
         } if(lowerName.contains("oreo")) {
             return 0.3985958;
         } else {
-//            System.out.println("///////////////////////////////////////");
-//            System.out.println(name);
             return 1;
         }
     }
