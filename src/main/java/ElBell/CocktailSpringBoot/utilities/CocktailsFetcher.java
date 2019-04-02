@@ -99,12 +99,6 @@ public class CocktailsFetcher {
         System.out.println(JsonPath.parse(raw).read( "$.drinks[0]", Drink.class));
     }
 
-    public static void main(String[] args) {
-        initJsonConfig();
-        CocktailsFetcher cocktailsFetcher = new CocktailsFetcher();
-        cocktailsFetcher.trialDrink();
-    }
-
     public void fetchGlasses() {
         String raw = fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list");
         String[] glasses = JsonPath.parse(raw).read("$.drinks[*].strGlass", String[].class);
