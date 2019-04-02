@@ -2,6 +2,7 @@ package ElBell.CocktailSpringBoot.utilities;
 
 import ElBell.CocktailSpringBoot.repositories.DrinkRepository;
 import ElBell.CocktailSpringBoot.entities.Drink;
+import ElBell.CocktailSpringBoot.services.DrinkService;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
@@ -27,12 +28,11 @@ import org.springframework.stereotype.Component;
 public class CocktailsFetcher {
 
     @Autowired
-    private DrinkRepository drinkRepository;
+    private DrinkService drinkService;
     private List<DrinkReference> referenceList = new ArrayList<>();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    //private static MainController mainController = new MainController();
 
-    private static void initJsonConfig() {
+    public static void initJsonConfig() {
         Configuration.setDefaults(new Configuration.Defaults() {
             private final JsonProvider jsonProvider = new JacksonJsonProvider();
             private final MappingProvider mappingProvider = new JacksonMappingProvider();
@@ -54,7 +54,7 @@ public class CocktailsFetcher {
         });
     }
 
-    @EventListener
+    //@EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
         initJsonConfig();
         fetchListOfOrdinaryDrinks();
@@ -65,7 +65,7 @@ public class CocktailsFetcher {
 
     private void saveAllDrinks() {
         for(Drink drink : Bar.getDrinks()) {
-            drinkRepository.save(drink);
+            drinkService.createDrink(drink);
         }
     }
 
@@ -95,14 +95,15 @@ public class CocktailsFetcher {
 
     public void trialDrink() {
         String raw =  fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=17266");
+        System.out.println(raw);
         System.out.println(JsonPath.parse(raw).read( "$.drinks[0]", Drink.class));
     }
 
-//    public static void main(String[] args) {
-//        initJsonConfig();
-//        CocktailsFetcher cocktailsFetcher = new CocktailsFetcher();
-//        cocktailsFetcher.fetchFullDrinks();
-//    }
+    public static void main(String[] args) {
+        initJsonConfig();
+        CocktailsFetcher cocktailsFetcher = new CocktailsFetcher();
+        cocktailsFetcher.trialDrink();
+    }
 
     public void fetchGlasses() {
         String raw = fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list");

@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -21,12 +19,11 @@ public class Drink implements Comparable<Drink> {
     @Column(name = "instructions", columnDefinition="BLOB")
     private String instructions;
     @OneToMany(mappedBy = "contain_drink", cascade = CascadeType.ALL)
-    private Set<Ingredient> ingredients;
+    private List<Ingredient> ingredients;
     @ManyToOne(cascade=CascadeType.ALL)
     private Glass glass;
 
-    public Drink() {
-    }
+    public Drink() { }
 
     public Drink(@JsonProperty("strDrink") String name,
                  @JsonProperty("strDrinkThumb") URL image,
@@ -65,13 +62,14 @@ public class Drink implements Comparable<Drink> {
                  @JsonProperty("strMeasure14") String strMeasure14,
                  @JsonProperty("strMeasure15") String strMeasure15)
     {
+        System.out.println(new Ingredient(strIngredient2, strMeasure2));
         this.name = name;
         this.image = image;
         this.id = id;
         this.alcoholic = alcoholic == null || alcoholic.equals("Alcoholic");
         this.glass = Glass.getGlass(glass);
         this.instructions = instructions;
-        ingredients = new TreeSet<>();
+        ingredients = new ArrayList<>();
         try {
             ingredients.add(new Ingredient(strIngredient1, strMeasure1));
             ingredients.add(new Ingredient(strIngredient2, strMeasure2));
@@ -89,7 +87,8 @@ public class Drink implements Comparable<Drink> {
             ingredients.add(new Ingredient(strIngredient14, strMeasure14));
             ingredients.add(new Ingredient(strIngredient15, strMeasure15));
         } catch (NullPointerException | NumberFormatException e) {
-//            System.out.println(this);
+            System.out.println(this);
+            //e.printStackTrace();
             //This NullPointerException is purposefully suppressed because some of the ingredients
             //in the API are serialized to null. We just want to ignore those nulls.
             //Drink that's affected is printed to visually ensure it entered correctly.
@@ -99,6 +98,7 @@ public class Drink implements Comparable<Drink> {
             System.out.println(this);
         }
         this.ingredients.forEach(x -> x.setContain_drink(this));
+        Collections.sort(ingredients);
     }
 
     public String getName() {
@@ -129,7 +129,7 @@ public class Drink implements Comparable<Drink> {
         return instructions;
     }
 
-    public Set<Ingredient> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
@@ -154,7 +154,7 @@ public class Drink implements Comparable<Drink> {
         this.instructions = instructions;
     }
 
-    public void setIngredients(Set<Ingredient> ingredients) {
+    public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 

@@ -177,6 +177,6 @@ public class Ingredient implements Comparable<Ingredient>{
 
     @Override
     public int compareTo(Ingredient o) {
-        return (int) ((ounces - o.ounces) * 100);
+        return (int) ((o.ounces - ounces) * 100);
     }
 }
