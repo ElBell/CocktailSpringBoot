@@ -10,19 +10,22 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(path="/cocktail")
 public class DrinkController {
+    private final DrinkService drinkService;
+
     @Autowired
-    private DrinkService drinkService;
+    public DrinkController(DrinkService drinkService) {
+        this.drinkService = drinkService;
+    }
 
     @GetMapping("/drinks")
     public @ResponseBody
     Iterable<Drink> getAllDrinks() {
-        // This returns a JSON with the drinks
         return drinkService.findAllDrinks();
     }
 
     @GetMapping("/drinks/{drinkId}")
     public @ResponseBody
-    Drink getDrinkById(@PathVariable(value = "drinkId") Long searchDrink) {
+    Drink getDrinkById(@PathVariable(value = "drinkId") Integer searchDrink) {
         return drinkService.findDrinkById(searchDrink);
     }
 
@@ -32,12 +35,12 @@ public class DrinkController {
     }
 
     @PutMapping("/drinks/{drinkId}")
-    public Drink updateDrink(@PathVariable Long drinkId, @Valid @RequestBody Drink drinkRequest) {
+    public Drink updateDrink(@PathVariable Integer drinkId, @Valid @RequestBody Drink drinkRequest) {
         return drinkService.updateDrink(drinkId, drinkRequest);
     }
 
     @DeleteMapping("/drinks/{drinkId}")
-    public void deleteDrink(@PathVariable Long drinkId) {
+    public void deleteDrink(@PathVariable Integer drinkId) {
          drinkService.deleteDrink(drinkId);
     }
 

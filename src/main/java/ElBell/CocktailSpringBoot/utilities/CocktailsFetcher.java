@@ -54,7 +54,7 @@ public class CocktailsFetcher {
         });
     }
 
-    //@EventListener
+    @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
         initJsonConfig();
         fetchListOfOrdinaryDrinks();
@@ -69,8 +69,15 @@ public class CocktailsFetcher {
         }
     }
 
+    public static void main(String[] args) {
+        initJsonConfig();
+        CocktailsFetcher cocktailsFetcher = new CocktailsFetcher();
+        cocktailsFetcher.fetchListOfCocktails();
+    }
+
     public void fetchListOfCocktails() {
         String raw = fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail");
+        System.out.println(raw);
         DrinkReference[] drinks = JsonPath.parse(raw).read("$.drinks", DrinkReference[].class);
         referenceList.addAll(Arrays.asList(drinks));
     }
@@ -92,31 +99,6 @@ public class CocktailsFetcher {
             }
         }
     }
-
-    public void trialDrink() {
-        String raw =  fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=17266");
-        System.out.println(raw);
-        System.out.println(JsonPath.parse(raw).read( "$.drinks[0]", Drink.class));
-    }
-
-    public void fetchGlasses() {
-        String raw = fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/list.php?g=list");
-        String[] glasses = JsonPath.parse(raw).read("$.drinks[*].strGlass", String[].class);
-        Bar.addGlasses(glasses);
-    }
-
-    public void fetchIngredients() {
-        String raw = fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list");
-        String[] ingredients = JsonPath.parse(raw).read("$.drinks", String[].class);
-        Bar.addIngredients(ingredients);
-    }
-
-    public void fetchCategories() {
-        String raw = fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list");
-        String[] categories = JsonPath.parse(raw).read("$.drinks", String[].class);
-        Bar.addCategories(categories);
-    }
-
 
     public String fetchRaw(String StringUrl) {
         URL url;

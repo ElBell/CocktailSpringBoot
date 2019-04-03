@@ -8,9 +8,7 @@ import org.junit.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class DrinkTest {
 
@@ -57,7 +55,7 @@ public class DrinkTest {
     public void testJsonConstructor2() {
         //Given
         String expectedName = "Applejack";
-        Long expectedId = 16311l;
+        Integer expectedId = 16311;
         String expectedGlassName = "Cocktail glass";
         String expectedInstructions = "Add all ingredients into mixing glass, chill and strain into cocktail glass";
         int expectedNumIngredients = 3;
@@ -69,7 +67,7 @@ public class DrinkTest {
 
         //Then
         String actualName = trialDrink.getName();
-        Long actualId = trialDrink.getId();
+        Integer actualId = trialDrink.getId();
         String actualGlassName = trialDrink.getGlass().getName();
         String actualInstructions = trialDrink.getInstructions();
         int actualNumIngredients = trialDrink.getIngredients().size();
@@ -81,17 +79,41 @@ public class DrinkTest {
         Assert.assertEquals(expectedNumIngredients, actualNumIngredients);
     }
 
+
+    @Test
+    public void testJsonConstructorFullIngredients() {
+        //Given
+        String expectedName = "Oatmeal Cookie";
+        boolean expectedAlcoholic = true;
+        int expectedNumIngredients = 15;
+
+
+        //When
+        String raw =  "{\"drinks\":[{\"idDrink\":\"0\",\"strDrink\":\"Oatmeal Cookie\",\"strDrinkAlternate\":null,\"strDrinkES\":null,\"strDrinkDE\":null,\"strDrinkFR\":null,\"strDrinkZH-HANS\":null,\"strDrinkZH-HANT\":null,\"strTags\":null,\"strVideo\":null,\"strCategory\":\"Cocktail\",\"strIBA\":null,\"strAlcoholic\":\"Alcoholic\",\"strGlass\":\"Mason jar\",\"strInstructions\":\"Just mix it all together.\\r\\nIt's meant to be a shot, but it works just fine as a proper adult-sized drink over lots of ice.\\r\\n\\r\\nTastes like an oatmeal cookie.\",\"strInstructionsES\":null,\"strInstructionsDE\":null,\"strInstructionsFR\":null,\"strInstructionsZH-HANS\":null,\"strInstructionsZH-HANT\":null,\"strDrinkThumb\":\"https:\\/\\/www.thecocktaildb.com\\/images\\/media\\/drink\\/bsvmlg1515792693.jpg\",\"strIngredient1\":\"Kahlua\",\"strIngredient2\":\"Bailey\",\"strIngredient3\":\"Butterscotch schnapps\",\"strIngredient4\":\"Jagermeister\",\"strIngredient5\":\"Goldschlager\",\"strIngredient6\":\"MacandChesse\",\"strIngredient7\":\"potato\",\"strIngredient8\":\"love\",\"strIngredient9\":\"heart\",\"strIngredient10\":\"marshmallow\",\"strIngredient11\":\"shoes\",\"strIngredient12\":\"boot\",\"strIngredient13\":\"table\",\"strIngredient14\":\"lolly\",\"strIngredient15\":\"cheese\",\"strMeasure1\":\"2 parts\",\"strMeasure2\":\"2 parts\",\"strMeasure3\":\"4 parts\",\"strMeasure4\":\"1 part\",\"strMeasure5\":\"1\\/2 part\",\"strMeasure6\":\"1 part\",\"strMeasure7\":\"1 part\",\"strMeasure8\":\"1 part\",\"strMeasure9\":\"1 part\",\"strMeasure10\":\"1 part\",\"strMeasure11\":\"1 part\",\"strMeasure12\":\"1 part\",\"strMeasure13\":\"1 part\",\"strMeasure14\":\"1 part\",\"strMeasure15\":\"1 part\",\"dateModified\":\"2018-01-12 21:31:33\"}]}";
+        Drink trialDrink = JsonPath.parse(raw).read( "$.drinks[0]", Drink.class);
+
+        //Then
+        String actualName = trialDrink.getName();
+        boolean actualAlcoholic = trialDrink.isAlcoholic();
+        int actualNumIngredients = trialDrink.getIngredients().size();
+        System.out.println(trialDrink);
+
+        Assert.assertEquals(expectedName, actualName);
+        Assert.assertEquals(expectedAlcoholic, actualAlcoholic);
+        Assert.assertEquals(expectedNumIngredients, actualNumIngredients);
+    }
+
     @Test
     public void testSetId() {
         //Given
         Drink drink = new Drink();
-        long expected = 12433564768L;
+        Integer expected = 124768;
 
         //When
         drink.setId(expected);
 
         //Then
-        Long actual = drink.getId();
+        Integer actual = drink.getId();
         Assert.assertEquals(expected, actual, 0.001);
     }
 
@@ -99,13 +121,13 @@ public class DrinkTest {
     public void testSetIdNull() {
         //Given
         Drink drink = new Drink();
-        Long expected = null;
+        Integer expected = null;
 
         //When
         drink.setId(expected);
 
         //Then
-        Long actual = drink.getId();
+        Integer actual = drink.getId();
         Assert.assertEquals(expected, actual, 0.001);
     }
 
@@ -205,7 +227,7 @@ public class DrinkTest {
     @Test
     public void testSetIngredients() {
         //Given
-        List<Ingredient> expected = new ArrayList<>();
+        SortedSet<Ingredient> expected = new TreeSet<>();
         expected.add(new Ingredient());
         expected.add(new Ingredient());
 
@@ -213,7 +235,7 @@ public class DrinkTest {
         drink.setIngredients(expected);
 
         //Then
-        List<Ingredient> actual = drink.getIngredients();
+        SortedSet<Ingredient> actual = drink.getIngredients();
         Assert.assertEquals(expected, actual);
     }
 

@@ -10,15 +10,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class DrinkService {
 
+    private final DrinkRepository drinkRepository;
+
     @Autowired
-    private DrinkRepository drinkRepository;
+    public DrinkService(DrinkRepository drinkRepository) {
+        this.drinkRepository = drinkRepository;
+    }
 
     public Iterable<Drink> findAllDrinks() {
         // This returns a JSON with the drinks
         return drinkRepository.findAll();
     }
 
-    public Drink findDrinkById(Long searchDrink) {
+    public Drink findDrinkById(Integer searchDrink) {
         return drinkRepository.findById(searchDrink)
                 .orElseThrow(() -> new ResourceNotFoundException("Drink", "id", searchDrink));
     }
@@ -26,13 +30,13 @@ public class DrinkService {
     public Drink createDrink(Drink drink) {
         try {
             return drinkRepository.save(drink);
-        }catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             System.out.println(drink);
             return null;
         }
     }
 
-    public Drink updateDrink(Long drinkId, Drink drinkRequest) {
+    public Drink updateDrink(Integer drinkId, Drink drinkRequest) {
         return drinkRepository.findById(drinkId).map(drink -> {
             drink.setName(drinkRequest.getName());
             drink.setAlcoholic(drinkRequest.isAlcoholic());
@@ -45,7 +49,7 @@ public class DrinkService {
         }).orElseThrow(() -> new ResourceNotFoundException("Drink", "id", drinkId));
     }
 
-    public void deleteDrink(Long drinkId) {
+    public void deleteDrink(Integer drinkId) {
         drinkRepository.deleteById(drinkId);
     }
 

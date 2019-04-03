@@ -1,10 +1,12 @@
 package ElBell.CocktailSpringBoot.entities;
 
+import ElBell.CocktailSpringBoot.utilities.Parser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Entity
 public class Ingredient implements Comparable<Ingredient>{
@@ -27,58 +29,10 @@ public class Ingredient implements Comparable<Ingredient>{
         }
         this.name = name;
         this.amount = amount;
-        this.ounces = parseMeasurement(amount);
+        this.ounces = Parser.parseMeasurement(amount, name);
     }
 
-    public Ingredient() {
-
-    }
-    private double parseMeasurement(String measurement) throws NumberFormatException{
-            return parseNumber(measurement) * getConversionRate(measurement);
-    }
-
-    private double getIngredientSize() {
-        return ingredientOunces.containsKey(name) ? ingredientOunces.get(name) : 1;
-    }
-
-    private double getConversionRate(String inputMeasurement) throws NumberFormatException{
-        String measurement = getUnits(inputMeasurement);
-        System.out.println(measurement);
-        if (measurement.length() == 0) {
-            return getIngredientSize();
-        }
-        if (convertToOunces.containsKey(measurement)) {
-            return convertToOunces.get(measurement);
-        }
-        return 0;
-    }
-
-    private String getUnits(String inputMeasurement) {
-        String units = inputMeasurement.toLowerCase().replaceAll("[-+.^:,/ 0-9]", "");
-        if (units.endsWith("s")) {
-            units = units.equals("glass") ? units : units.substring(0,units.length()-1);
-        }
-        return units;
-    }
-
-    private double parseNumber(String measurement) {
-        String number = measurement.replaceAll("([a-zA-Z])\\w+", "").trim();
-        if(number.contains("-")) {
-            number = number.split("-")[1];
-        }
-        if(number.contains("/")) {
-            return parseFraction(number);
-        } else {
-            return Double.parseDouble(number);
-        }
-    }
-
-    private double parseFraction(String num) {
-        String fraction = num.contains(" ") ? num.split(" ")[1] : num;
-        String[] fractionNumbers = fraction.split("/");
-        Double fractionResult =  Double.parseDouble(fractionNumbers[0]) / Double.parseDouble(fractionNumbers[1]);
-        return fractionResult + (num.contains(" ") ? Double.parseDouble(num.split(" ")[0]) : 0);
-    }
+    public Ingredient() { }
 
     public String getName() {
         return name;
@@ -131,38 +85,26 @@ public class Ingredient implements Comparable<Ingredient>{
 
     @Override
     public int compareTo(Ingredient o) {
-        return (int) ((o.ounces - ounces) * 100);
+        int ouncesCompared = (int) ((o.ounces - ounces) * 100);
+        if (ouncesCompared == 0 && name != null) {
+            return name.compareTo(o.getName());
+        }
+        return ouncesCompared;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ingredient that = (Ingredient) o;
+        return Double.compare(that.ounces, ounces) == 0 &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(amount, that.amount) &&
+                Objects.equals(contain_drink, that.contain_drink);
+    }
 
-    private static Map<String, Double> convertToOunces = new HashMap<>();
-    private static Map<String, Double> ingredientOunces = new HashMap<>();
-    static {
-        convertToOunces.put("oz", 1d); convertToOunces.put("part", 1d); convertToOunces.put("measure", 1d);
-        convertToOunces.put("tblsp", 0.5); convertToOunces.put("chunk", 0.5); convertToOunces.put("tbsp", 0.5);
-        convertToOunces.put("can", 12d);
-        convertToOunces.put("tsp", 0.166667); convertToOunces.put("cube", 0.1666667);
-        convertToOunces.put("dash", 0.03125);
-        convertToOunces.put("splash", 0.2); convertToOunces.put("fresh", 0.2);
-        convertToOunces.put("juice", 2d); convertToOunces.put("whole", 2d);
-        convertToOunces.put("cl", 0.33814);
-        convertToOunces.put("shot", 1.5); convertToOunces.put("jigger", 1.5);
-        convertToOunces.put("scoop", 4d);
-        convertToOunces.put("twist", 0.00000001); convertToOunces.put("slice", 0.00000001);
-        convertToOunces.put("ml", 0.033814);
-        convertToOunces.put("dl", 3.3814);
-        convertToOunces.put("cup", 8d);
-        convertToOunces.put("glass", 16d);
-
-        ingredientOunces.put("strawberries", 0.4);
-        ingredientOunces.put("cherry", 0.2); ingredientOunces.put("olive", 0.2);
-        ingredientOunces.put("blackberries", 0.1);
-        ingredientOunces.put("egg", 1d); ingredientOunces.put("vodka", 1d);
-        ingredientOunces.put("lime", 0.75); ingredientOunces.put("orange", 0.75); ingredientOunces.put("lemon", 0.75);
-        ingredientOunces.put("bananas", 4d);
-        ingredientOunces.put("mint", 0.00000001);
-        ingredientOunces.put("pineapple", 2d);
-        ingredientOunces.put("cube", 0.166667); ingredientOunces.put("sugar", 0.166667);
-        ingredientOunces.put("oreo", 0.3985958);
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, amount, ounces, contain_drink);
     }
 }

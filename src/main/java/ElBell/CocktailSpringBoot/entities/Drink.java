@@ -2,6 +2,7 @@ package ElBell.CocktailSpringBoot.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.SortNatural;
 
 import javax.persistence.*;
 import java.net.URL;
@@ -12,14 +13,15 @@ import java.util.*;
 public class Drink implements Comparable<Drink> {
 
     @Id
-    private Long id;
+    private Integer id;
     private String name;
     private URL image;
     private boolean alcoholic;
     @Column(name = "instructions", columnDefinition="BLOB")
     private String instructions;
     @OneToMany(mappedBy = "contain_drink", cascade = CascadeType.ALL)
-    private List<Ingredient> ingredients;
+    @SortNatural
+    private SortedSet<Ingredient> ingredients;
     @ManyToOne(cascade=CascadeType.ALL)
     private Glass glass;
 
@@ -27,7 +29,7 @@ public class Drink implements Comparable<Drink> {
 
     public Drink(@JsonProperty("strDrink") String name,
                  @JsonProperty("strDrinkThumb") URL image,
-                 @JsonProperty("idDrink") Long id,
+                 @JsonProperty("idDrink") Integer id,
                  @JsonProperty("strAlcoholic") String alcoholic,
                  @JsonProperty("strGlass") String glass,
                  @JsonProperty("strInstructions") String instructions,
@@ -62,14 +64,13 @@ public class Drink implements Comparable<Drink> {
                  @JsonProperty("strMeasure14") String strMeasure14,
                  @JsonProperty("strMeasure15") String strMeasure15)
     {
-        System.out.println(new Ingredient(strIngredient2, strMeasure2));
         this.name = name;
         this.image = image;
         this.id = id;
         this.alcoholic = alcoholic == null || alcoholic.equals("Alcoholic");
         this.glass = Glass.getGlass(glass);
         this.instructions = instructions;
-        ingredients = new ArrayList<>();
+        ingredients = new TreeSet<>();
         try {
             ingredients.add(new Ingredient(strIngredient1, strMeasure1));
             ingredients.add(new Ingredient(strIngredient2, strMeasure2));
@@ -87,25 +88,22 @@ public class Drink implements Comparable<Drink> {
             ingredients.add(new Ingredient(strIngredient14, strMeasure14));
             ingredients.add(new Ingredient(strIngredient15, strMeasure15));
         } catch (NullPointerException | NumberFormatException e) {
-            System.out.println(this);
+            //System.out.println(this);
             //e.printStackTrace();
             //This NullPointerException is purposefully suppressed because some of the ingredients
             //in the API are serialized to null. We just want to ignore those nulls.
             //Drink that's affected is printed to visually ensure it entered correctly.
-        } catch (OptimisticLockException e) {
-            System.out.println(this);
         } catch (Exception e) {
             System.out.println(this);
         }
         this.ingredients.forEach(x -> x.setContain_drink(this));
-        Collections.sort(ingredients);
     }
 
     public String getName() {
         return name;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -129,11 +127,11 @@ public class Drink implements Comparable<Drink> {
         return instructions;
     }
 
-    public List<Ingredient> getIngredients() {
+    public SortedSet<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -154,7 +152,7 @@ public class Drink implements Comparable<Drink> {
         this.instructions = instructions;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
+    public void setIngredients(SortedSet<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 

@@ -13,10 +13,7 @@ public class CocktailApplication extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(CocktailApplication.class);
 	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(CocktailApplication.class, args);
 	}
-
-
 }
