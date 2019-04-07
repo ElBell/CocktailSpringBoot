@@ -59,8 +59,8 @@ public class DrinkService {
         drinkRepository.deleteById(drinkId);
     }
 
-    public List<Drink> findByIngredient_Include(List<String> ingredientNames) {
-        List<Drink> drinks = new ArrayList<>();
+    public Set<Drink> findByIngredient_Include(List<String> ingredientNames) {
+        Set<Drink> drinks = new HashSet<>();
         for (Drink drink : drinkRepository.findAll()) {
             for (String ingredientName : ingredientNames) {
                 if (drink.containsIngredient(ingredientName)) {
