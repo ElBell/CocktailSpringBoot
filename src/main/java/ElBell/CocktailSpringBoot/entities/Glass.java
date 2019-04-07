@@ -3,6 +3,7 @@
 package ElBell.CocktailSpringBoot.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.net.MalformedURLException;
@@ -22,7 +23,7 @@ public class Glass {
     private String name;
     private URI image;
     @OneToMany(mappedBy = "glass", cascade=CascadeType.ALL)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<Drink> drinks;
 
     public Glass(String name, String location) {
@@ -105,6 +106,7 @@ public class Glass {
         return drinks;
     }
 
+    @JsonIgnore
     public void setDrinks(Set<Drink> drinks) {
         this.drinks = drinks;
     }

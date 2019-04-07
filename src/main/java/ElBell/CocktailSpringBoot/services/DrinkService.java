@@ -1,10 +1,16 @@
 package ElBell.CocktailSpringBoot.services;
 
 import ElBell.CocktailSpringBoot.entities.Drink;
+import ElBell.CocktailSpringBoot.entities.Ingredient;
 import ElBell.CocktailSpringBoot.repositories.DrinkRepository;
 import ElBell.CocktailSpringBoot.utilities.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 
 @Service
@@ -51,6 +57,31 @@ public class DrinkService {
 
     public void deleteDrink(Integer drinkId) {
         drinkRepository.deleteById(drinkId);
+    }
+
+    public List<Drink> findByIngredient_Include(List<String> ingredientNames) {
+        List<Drink> drinks = new ArrayList<>();
+        for (Drink drink : drinkRepository.findAll()) {
+            for (String ingredientName : ingredientNames) {
+                if (drink.containsIngredient(ingredientName)) {
+                    drinks.add(drink);
+                }
+            }
+        }
+        return drinks;
+    }
+
+    public List<Drink> findByIngredient_Limit(List<String> ingredentNames) {
+        return StreamSupport.stream(drinkRepository.findAll().spliterator(), false)
+                .filter(drink -> drink.containsAll(ingredentNames)).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public Set<String> findAllIngredients() {
+        Set<String> ingredients = new TreeSet<>();
+        for (Drink drink : drinkRepository.findAll()) {
+            drink.getIngredients().forEach(ingredient -> ingredients.add(ingredient.getName().toLowerCase()));
+        }
+        return ingredients;
     }
 
 }

@@ -2,6 +2,7 @@ package ElBell.CocktailSpringBoot.entities;
 
 import ElBell.CocktailSpringBoot.utilities.Parser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class Ingredient implements Comparable<Ingredient>{
     private double ounces;
     @ManyToOne
     @JoinColumn
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Drink contain_drink;
 
     public Ingredient(String name, String amount) {
@@ -58,6 +59,7 @@ public class Ingredient implements Comparable<Ingredient>{
         this.ounces = ounces;
     }
 
+    @JsonIgnore
     public Drink getContain_drink() {
         return contain_drink;
     }
@@ -97,14 +99,11 @@ public class Ingredient implements Comparable<Ingredient>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ingredient that = (Ingredient) o;
-        return Double.compare(that.ounces, ounces) == 0 &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(amount, that.amount) &&
-                Objects.equals(contain_drink, that.contain_drink);
+        return Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, amount, ounces, contain_drink);
+        return Objects.hash(name);
     }
 }

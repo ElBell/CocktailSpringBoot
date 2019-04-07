@@ -11,7 +11,6 @@ import java.util.*;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Drink implements Comparable<Drink> {
-
     @Id
     private Integer id;
     private String name;
@@ -105,6 +104,24 @@ public class Drink implements Comparable<Drink> {
 
     public Integer getId() {
         return id;
+    }
+    
+    public boolean containsIngredient(String ingredientName) {
+        for (Ingredient ingredient : ingredients) {
+            if (ingredient.getName().equalsIgnoreCase(ingredientName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean containsAll(List<String> ingredients) {
+        for (String ingredient : ingredients) {
+            if (!containsIngredient(ingredient)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public URL getImage() {
