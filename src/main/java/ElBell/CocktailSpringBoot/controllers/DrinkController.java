@@ -45,17 +45,17 @@ public class DrinkController {
          drinkService.deleteDrink(drinkId);
     }
 
-    @GetMapping(value = "/ingredients/limit")
-    public Iterable<Drink> findByIngredient_Limit(@RequestBody List<String> ingredientNames) {
+    @GetMapping(value = "/ingredients/limit/{ingredientNames}")
+    public Iterable<Drink> findByIngredient_Limit(@PathVariable List<String> ingredientNames) {
         return drinkService.findByIngredient_Limit(ingredientNames);
     }
 
-    @GetMapping(value = "/ingredients/include")
-    public Iterable<Drink> findByIngredient_Include(@RequestBody List<String> ingredientNames) {
+    @GetMapping(value = "/ingredients/include/{ingredientNames}")
+    public Iterable<Drink> findByIngredient_Include(@PathVariable List<String> ingredientNames) {
         return drinkService.findByIngredient_Include(ingredientNames);
     }
 
-    @GetMapping(value = "/ingredients")
+    @GetMapping(value="/ingredients")
     public Iterable<String> findAllIngredients() {
         return drinkService.findAllIngredients();
     }
