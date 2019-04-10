@@ -18,7 +18,7 @@ public class Drink implements Comparable<Drink> {
     private boolean alcoholic;
     @Column(name = "instructions", columnDefinition="BLOB")
     private String instructions;
-    @OneToMany(mappedBy = "contain_drink", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "contain_drink", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @SortNatural
     private SortedSet<Ingredient> ingredients;
     @ManyToOne(cascade=CascadeType.ALL)

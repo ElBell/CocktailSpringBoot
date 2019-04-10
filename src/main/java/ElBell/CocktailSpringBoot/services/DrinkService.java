@@ -34,12 +34,7 @@ public class DrinkService {
     }
 
     public Drink createDrink(Drink drink) {
-        try {
-            return drinkRepository.save(drink);
-        } catch (NullPointerException e) {
-            System.out.println(drink);
-            return null;
-        }
+        return drinkRepository.save(drink);
     }
 
     public Drink updateDrink(Integer drinkId, Drink drinkRequest) {

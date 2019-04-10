@@ -54,7 +54,7 @@ public class CocktailsFetcher {
         });
     }
 
-    //@EventListener
+    @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
         initJsonConfig();
         fetchListOfOrdinaryDrinks();
@@ -68,12 +68,23 @@ public class CocktailsFetcher {
             drinkService.createDrink(drink);
         }
     }
-
-    public static void main(String[] args) {
-        initJsonConfig();
-        CocktailsFetcher cocktailsFetcher = new CocktailsFetcher();
-        cocktailsFetcher.fetchListOfCocktails();
-    }
+//
+//    public static void main(String[] args) throws IOException {
+//        initJsonConfig();
+//        CocktailsFetcher cocktailsFetcher = new CocktailsFetcher();
+//        cocktailsFetcher.fetchListOfOrdinaryDrinks();
+//        cocktailsFetcher.fetchListOfCocktails();
+//        cocktailsFetcher.fetchFullDrinks();
+//        BufferedWriter writer = new BufferedWriter(new FileWriter("url.txt", true));
+//        Bar.getDrinks().forEach(drink -> {
+//            try {
+//                writer.append(drink.getImage().toString() + "\n");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//        writer.close();
+//    }
 
     public void fetchListOfCocktails() {
         String raw = fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail");
