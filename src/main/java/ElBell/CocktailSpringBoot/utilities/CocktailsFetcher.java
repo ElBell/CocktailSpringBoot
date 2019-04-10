@@ -54,7 +54,7 @@ public class CocktailsFetcher {
         });
     }
 
-    @EventListener
+    //@EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
         initJsonConfig();
         fetchListOfOrdinaryDrinks();
