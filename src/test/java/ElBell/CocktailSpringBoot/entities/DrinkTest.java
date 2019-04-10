@@ -163,13 +163,13 @@ public class DrinkTest {
     public void testSetImage() throws MalformedURLException {
         //Given
         Drink drink = new Drink();
-        URL expected = new URL("https://www.thecocktaildb.com/images/media/drink/bsvmlg1515792693.jpg");
+        String expected = "bsvmlg1515792693.jpg";
 
         //When
         drink.setImage(expected);
 
         //Then
-        URL actual = drink.getImage();
+        String actual = drink.getImage();
         Assert.assertEquals(expected, actual);
     }
 

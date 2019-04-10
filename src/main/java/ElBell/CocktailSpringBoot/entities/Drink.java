@@ -14,7 +14,7 @@ public class Drink implements Comparable<Drink> {
     @Id
     private Integer id;
     private String name;
-    private URL image;
+    private String image;
     private boolean alcoholic;
     @Column(name = "instructions", columnDefinition="BLOB")
     private String instructions;
@@ -64,7 +64,7 @@ public class Drink implements Comparable<Drink> {
                  @JsonProperty("strMeasure15") String strMeasure15)
     {
         this.name = name;
-        this.image = image;
+        this.image = image.toString().replaceAll("https://www.thecocktaildb.com/images/media/drink/", "");
         this.id = id;
         this.alcoholic = alcoholic == null || alcoholic.equals("Alcoholic");
         this.glass = Glass.getGlass(glass);
@@ -124,8 +124,12 @@ public class Drink implements Comparable<Drink> {
         return true;
     }
 
-    public URL getImage() {
+    public String getImage() {
         return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public boolean isAlcoholic() {
@@ -156,14 +160,9 @@ public class Drink implements Comparable<Drink> {
         this.name = name;
     }
 
-    public void setImage(URL image) {
-        this.image = image;
-    }
-
     public void setAlcoholic(boolean alcoholic) {
         this.alcoholic = alcoholic;
     }
-
 
     public void setInstructions(String instructions) {
         this.instructions = instructions;
