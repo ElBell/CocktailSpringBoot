@@ -27,7 +27,7 @@ public class Drink implements Comparable<Drink> {
     public Drink() { }
 
     public Drink(@JsonProperty("strDrink") String name,
-                 @JsonProperty("strDrinkThumb") URL image,
+                 @JsonProperty("strDrinkThumb") String image,
                  @JsonProperty("idDrink") Integer id,
                  @JsonProperty("strAlcoholic") String alcoholic,
                  @JsonProperty("strGlass") String glass,
@@ -64,7 +64,7 @@ public class Drink implements Comparable<Drink> {
                  @JsonProperty("strMeasure15") String strMeasure15)
     {
         this.name = name;
-        this.image = image.toString().replaceAll("https://www.thecocktaildb.com/images/media/drink/", "");
+        this.image = image.replaceAll("https://www.thecocktaildb.com/images/media/drink/", "");
         this.id = id;
         this.alcoholic = alcoholic == null || alcoholic.equals("Alcoholic");
         this.glass = Glass.getGlass(glass);

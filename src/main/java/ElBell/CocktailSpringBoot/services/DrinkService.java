@@ -39,16 +39,8 @@ public class DrinkService {
     }
 
     public Drink updateDrink(Integer drinkId, Drink drinkRequest) {
-        return drinkRepository.findById(drinkId).map(drink -> {
-            drink.setName(drinkRequest.getName());
-            drink.setAlcoholic(drinkRequest.isAlcoholic());
-            drink.setGlass(drinkRequest.getGlass());
-            drink.setId(drinkRequest.getId());
-            drink.setImage(drinkRequest.getImage());
-            drink.setInstructions(drinkRequest.getInstructions());
-            drink.setIngredients(drinkRequest.getIngredients());
-            return drinkRepository.save(drink);
-        }).orElseThrow(() -> new ResourceNotFoundException("Drink", "id", drinkId));
+        drinkRepository.deleteById(drinkId);
+        return drinkRepository.save(drinkRequest);
     }
 
     public void deleteDrink(Integer drinkId) {

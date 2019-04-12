@@ -4,11 +4,15 @@ import ElBell.CocktailSpringBoot.CocktailApplication;
 import ElBell.CocktailSpringBoot.controllers.DrinkController;
 import ElBell.CocktailSpringBoot.entities.Drink;
 import ElBell.CocktailSpringBoot.entities.Ingredient;
+import ElBell.CocktailSpringBoot.repositories.DrinkRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -31,6 +35,8 @@ public class DrinkServiceTest {
     @Before
     public void setup(){
         this.controller = new DrinkController(service);
+        mockRepo = Mockito.mock(DrinkRepository.class);
+        drinkService = new DrinkService(mockRepo);
     }
 
 
@@ -223,4 +229,74 @@ public class DrinkServiceTest {
         Assert.assertEquals(expected, actual);
         Assert.assertEquals(expectedDrink, actualDrink);
     }
+
+    @Mock
+    private DrinkRepository mockRepo;
+    @InjectMocks
+    private DrinkService drinkService;
+
+    @Test
+    public void testCreateService(){
+        //Given
+        Drink drink = new Drink();
+        drink.setId(1);
+        Drink expected = new Drink();
+        expected.setId(1);
+        //When
+        Mockito.when(mockRepo.save(drink)).thenReturn(expected);
+
+        //Then
+        Drink actual = drinkService.createDrink(drink);
+
+        Assert.assertEquals(expected, actual);
+    }
+
+
+    @Test
+    public void testFindById(){
+        //Given
+        Drink expected = new Drink();
+        //When
+        Mockito.when(mockRepo.findById(1)).thenReturn(java.util.Optional.of(expected));
+        Drink actual = drinkService.findDrinkById(1);
+        //Then
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testDelete(){
+        //Given
+        int id = 1;
+        Drink drink = new Drink();
+        drink.setId(id);
+        drinkService.createDrink(drink);
+
+        //When
+        drinkService.deleteDrink(id);
+
+        //Then
+        Mockito.verify(mockRepo, Mockito.times(1)).deleteById(id);
+    }
+
+    @Test
+    public void testFindAllService(){
+        //Given
+        Drink drink = new Drink();
+        drink.setId(1);
+        Drink drink1 = new Drink();
+        drink1.setId(2);
+        mockRepo.save(drink);
+        mockRepo.save(drink1);
+
+        List<Drink> expected = new ArrayList<>();
+        expected.add(drink);
+        expected.add(drink1);
+        //When
+        Mockito.when(mockRepo.findAll()).thenReturn(expected);
+        List<Drink> actual = (List<Drink>) drinkService.findAllDrinks();
+
+        //Then
+        Assert.assertEquals(expected, actual);
+    }
+
 }

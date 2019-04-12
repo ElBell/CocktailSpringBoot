@@ -22,24 +22,22 @@ public class DrinkController {
     }
 
     @GetMapping("/drinks")
-    public @ResponseBody
-    ResponseEntity<Iterable<Drink>> findAllDrinks() {
+    public @ResponseBody ResponseEntity<Iterable<Drink>> findAllDrinks() {
         return new ResponseEntity<>(drinkService.findAllDrinks(), HttpStatus.OK);
     }
 
     @GetMapping("/drinks/{drinkId}")
-    public @ResponseBody
-    ResponseEntity<Drink> findDrinkById(@PathVariable(value = "drinkId") Integer searchDrink) {
+    public @ResponseBody ResponseEntity<Drink> findDrinkById(@PathVariable(value = "drinkId") Integer searchDrink) {
         return new ResponseEntity<>(drinkService.findDrinkById(searchDrink), HttpStatus.OK);
     }
 
     @PostMapping("/drinks")
-    public ResponseEntity<Drink> createDrink(@Valid @RequestBody Drink drink) {
+    public @ResponseBody ResponseEntity<Drink> createDrink(@RequestBody Drink drink) {
             return new ResponseEntity<>(drinkService.createDrink(drink), HttpStatus.CREATED);
     }
 
     @PutMapping("/drinks/{drinkId}")
-    public ResponseEntity<Drink> updateDrink(@PathVariable Integer drinkId, @Valid @RequestBody Drink drinkRequest) {
+    public @ResponseBody ResponseEntity<Drink> updateDrink(@PathVariable Integer drinkId,  @RequestBody Drink drinkRequest) {
         return new ResponseEntity<>(drinkService.updateDrink(drinkId, drinkRequest), HttpStatus.OK);
     }
 
@@ -50,17 +48,17 @@ public class DrinkController {
     }
 
     @GetMapping(value = "/ingredients/limit/{ingredientNames}")
-    public ResponseEntity<Iterable<Drink>> findByIngredient_Limit(@PathVariable List<String> ingredientNames) {
+    public @ResponseBody ResponseEntity<Iterable<Drink>> findByIngredient_Limit(@PathVariable List<String> ingredientNames) {
         return new ResponseEntity<>(drinkService.findByIngredient_Limit(ingredientNames), HttpStatus.OK);
     }
 
     @GetMapping(value = "/ingredients/include/{ingredientNames}")
-    public ResponseEntity<Iterable<Drink>> findByIngredient_Include(@PathVariable List<String> ingredientNames) {
+    public @ResponseBody ResponseEntity<Iterable<Drink>> findByIngredient_Include(@PathVariable List<String> ingredientNames) {
         return new ResponseEntity<>(drinkService.findByIngredient_Include(ingredientNames), HttpStatus.OK);
     }
 
     @GetMapping(value="/ingredients")
-    public ResponseEntity<Iterable<String>> findAllIngredients() {
+    public @ResponseBody ResponseEntity<Iterable<String>> findAllIngredients() {
         return new ResponseEntity<>(drinkService.findAllIngredients(), HttpStatus.OK);
     }
 
