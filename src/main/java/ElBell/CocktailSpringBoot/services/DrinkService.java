@@ -1,6 +1,7 @@
 package ElBell.CocktailSpringBoot.services;
 
 import ElBell.CocktailSpringBoot.entities.Drink;
+import ElBell.CocktailSpringBoot.entities.Glass;
 import ElBell.CocktailSpringBoot.entities.Ingredient;
 import ElBell.CocktailSpringBoot.repositories.DrinkRepository;
 import ElBell.CocktailSpringBoot.utilities.ResourceNotFoundException;
@@ -51,7 +52,7 @@ public class DrinkService {
     }
 
     public void deleteDrink(Integer drinkId) {
-        drinkRepository.deleteById(drinkId);
+         drinkRepository.deleteById(drinkId);
     }
 
     public Set<Drink> findByIngredient_Include(List<String> ingredientNames) {
@@ -66,9 +67,9 @@ public class DrinkService {
         return drinks;
     }
 
-    public List<Drink> findByIngredient_Limit(List<String> ingredentNames) {
+    public Set<Drink> findByIngredient_Limit(List<String> ingredentNames) {
         return StreamSupport.stream(drinkRepository.findAll().spliterator(), false)
-                .filter(drink -> drink.containsAll(ingredentNames)).collect(Collectors.toCollection(ArrayList::new));
+                .filter(drink -> drink.containsAll(ingredentNames)).collect(Collectors.toCollection(HashSet::new));
     }
 
     public Set<String> findAllIngredients() {
@@ -79,4 +80,9 @@ public class DrinkService {
         return ingredients;
     }
 
+    public Set<Glass> findAllGlasses() {
+        Set<Glass> glasses = new HashSet<>();
+        drinkRepository.findAll().forEach(drink -> glasses.add(drink.getGlass()));
+        return glasses;
+    }
 }

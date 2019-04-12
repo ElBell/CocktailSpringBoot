@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
 public class DrinkTest {
@@ -273,5 +272,71 @@ public class DrinkTest {
 
         //Then
         Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testContainsIngredient() {
+        //Given
+        Drink drink = new Drink();
+        Drink drink1 = new Drink();
+        Ingredient ingredient = new Ingredient();
+        ingredient.setName("something");
+        Ingredient ingredient1 = new Ingredient();
+        ingredient1.setName("somethingelse");
+        Ingredient ingredient2 = new Ingredient();
+        ingredient2.setName("somethingthethird");
+        SortedSet<Ingredient> ingredients = new TreeSet<>();
+        ingredients.add(ingredient);
+        ingredients.add(ingredient1);
+        SortedSet<Ingredient> ingredients1 = new TreeSet<>();
+        ingredients1.add(ingredient);
+        ingredients1.add(ingredient2);
+        drink.setIngredients(ingredients);
+        drink1.setIngredients(ingredients1);
+
+        //When
+        boolean actual = drink.containsIngredient("something");
+        boolean actualFalse = drink.containsIngredient("somethingthethird");
+
+        //Then
+        Assert.assertTrue(actual);
+        Assert.assertFalse(actualFalse);
+    }
+
+
+    @Test
+    public void testContainsIngredientAll() {
+        //Given
+        Drink drink = new Drink();
+        Drink drink1 = new Drink();
+        Ingredient ingredient = new Ingredient();
+        ingredient.setName("something");
+        Ingredient ingredient1 = new Ingredient();
+        ingredient1.setName("somethingelse");
+        Ingredient ingredient2 = new Ingredient();
+        ingredient2.setName("somethingthethird");
+        SortedSet<Ingredient> ingredients = new TreeSet<>();
+        ingredients.add(ingredient);
+        ingredients.add(ingredient1);
+        SortedSet<Ingredient> ingredients1 = new TreeSet<>();
+        ingredients1.add(ingredient);
+        ingredients1.add(ingredient2);
+        drink.setIngredients(ingredients);
+        drink1.setIngredients(ingredients1);
+        List<String> drinkRequest = new ArrayList<>();
+        drinkRequest.add("something");
+        drinkRequest.add("somethingelse");
+
+        List<String> drinkRequestFalse = new ArrayList<>();
+        drinkRequestFalse.add("something");
+        drinkRequestFalse.add("somethingthethird");
+
+        //When
+        boolean actual = drink.containsAll(drinkRequest);
+        boolean actualFalse = drink.containsAll(drinkRequestFalse);
+
+        //Then
+        Assert.assertTrue(actual);
+        Assert.assertFalse(actualFalse);
     }
 }

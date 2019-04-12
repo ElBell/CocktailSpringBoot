@@ -8,19 +8,7 @@ import java.util.*;
 
 //
 public class Bar {
-    private static Bar bar = null;
     private static List<Drink> drinks = new ArrayList<>();
-
-    private Bar() {
-
-    }
-    public static Bar getInstance()
-    {
-        if (bar == null)
-            bar = new Bar();
-
-        return bar;
-    }
 
     public static List<Drink> getDrinks() {
         return drinks;

@@ -169,6 +169,7 @@ public class Drink implements Comparable<Drink> {
     }
 
     public void setIngredients(SortedSet<Ingredient> ingredients) {
+        ingredients.forEach(ingredient -> ingredient.setContain_drink(this));
         this.ingredients = ingredients;
     }
 

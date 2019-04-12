@@ -21,7 +21,6 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -88,7 +87,6 @@ public class CocktailsFetcher {
 
     public void fetchListOfCocktails() {
         String raw = fetchRaw("https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail");
-        System.out.println(raw);
         DrinkReference[] drinks = JsonPath.parse(raw).read("$.drinks", DrinkReference[].class);
         referenceList.addAll(Arrays.asList(drinks));
     }
@@ -139,5 +137,9 @@ public class CocktailsFetcher {
             }
         }
         return webpage;
+    }
+
+    public List<DrinkReference> getReferenceList() {
+        return referenceList;
     }
 }
