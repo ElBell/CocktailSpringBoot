@@ -11,4 +11,4 @@ https://www.thecocktaildb.com/faq.php
 Also a nutrition API for getting calorie estimations\
 https://ndb.nal.usda.gov/ndb/doc/index
 
-Durring development, I'm planning to use a Spring Boot framework, a Flutter or React Bootstrap with TypeScript front-end, and a database back-end.
+During development, I'm planning to use a Spring Boot framework, a Flutter or React Bootstrap with TypeScript front-end, and a database back-end.
