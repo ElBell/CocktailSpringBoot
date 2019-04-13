@@ -270,6 +270,9 @@ public class DrinkServiceTest {
         Drink drink = new Drink();
         drink.setId(id);
         drinkService.createDrink(drink);
+        Drink drink1 = new Drink();
+        drink.setId(id);
+        drinkService.createDrink(drink1);
 
         //When
         drinkService.deleteDrink(id);
