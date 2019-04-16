@@ -1,11 +1,12 @@
 package ElBell.CocktailSpringBoot.utilities;
 
+import ElBell.CocktailSpringBoot.scripts.DrinkReference;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static ElBell.CocktailSpringBoot.utilities.CocktailsFetcher.initJsonConfig;
+import static ElBell.CocktailSpringBoot.scripts.CocktailsFetcher.initJsonConfig;
 
 public class DrinkReferenceTest {
 

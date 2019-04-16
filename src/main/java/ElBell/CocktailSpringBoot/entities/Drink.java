@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.SortNatural;
 
 import javax.persistence.*;
-import java.net.URL;
 import java.util.*;
 
 @Entity
@@ -171,6 +170,10 @@ public class Drink implements Comparable<Drink> {
     public void setIngredients(SortedSet<Ingredient> ingredients) {
         ingredients.forEach(ingredient -> ingredient.setContain_drink(this));
         this.ingredients = ingredients;
+    }
+
+    public void addIngredient(Ingredient ingredient) {
+        ingredients.add(ingredient);
     }
 
     public int compareTo(Drink drink) {

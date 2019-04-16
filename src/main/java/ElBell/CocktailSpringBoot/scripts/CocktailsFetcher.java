@@ -1,8 +1,8 @@
-package ElBell.CocktailSpringBoot.utilities;
+package ElBell.CocktailSpringBoot.scripts;
 
-import ElBell.CocktailSpringBoot.repositories.DrinkRepository;
 import ElBell.CocktailSpringBoot.entities.Drink;
 import ElBell.CocktailSpringBoot.services.DrinkService;
+import ElBell.CocktailSpringBoot.utilities.Bar;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;

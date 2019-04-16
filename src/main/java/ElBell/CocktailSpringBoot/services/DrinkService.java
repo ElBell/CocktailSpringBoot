@@ -34,6 +34,10 @@ public class DrinkService {
                 .orElseThrow(() -> new ResourceNotFoundException("Drink", "id", searchDrink));
     }
 
+    public Drink findDrinkByName(String searchDrink) {
+        return drinkRepository.findByName(searchDrink);
+    }
+
     public Drink createDrink(Drink drink) {
         return drinkRepository.save(drink);
     }
@@ -76,5 +80,11 @@ public class DrinkService {
         Set<Glass> glasses = new HashSet<>();
         drinkRepository.findAll().forEach(drink -> glasses.add(drink.getGlass()));
         return glasses;
+    }
+
+    public void deleteDrink(String name) {
+        if (drinkRepository.findByName(name) != null) {
+            drinkRepository.delete(drinkRepository.findByName(name));
+        }
     }
 }

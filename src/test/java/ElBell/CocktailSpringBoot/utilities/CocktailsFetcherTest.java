@@ -1,6 +1,8 @@
 package ElBell.CocktailSpringBoot.utilities;
 
 import ElBell.CocktailSpringBoot.entities.Drink;
+import ElBell.CocktailSpringBoot.scripts.CocktailsFetcher;
+import ElBell.CocktailSpringBoot.scripts.DrinkReference;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

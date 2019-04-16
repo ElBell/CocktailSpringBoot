@@ -1,6 +1,6 @@
 package ElBell.CocktailSpringBoot.entities;
 
-import ElBell.CocktailSpringBoot.utilities.CocktailsFetcher;
+import ElBell.CocktailSpringBoot.scripts.CocktailsFetcher;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Assert;
 import org.junit.Before;

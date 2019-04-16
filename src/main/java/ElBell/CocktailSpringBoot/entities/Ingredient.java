@@ -18,7 +18,7 @@ public class Ingredient implements Comparable<Ingredient>{
     private String name;
     private String amount;
     private double ounces;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Drink contain_drink;

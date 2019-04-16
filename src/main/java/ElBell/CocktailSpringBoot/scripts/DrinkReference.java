@@ -1,4 +1,4 @@
-package ElBell.CocktailSpringBoot.utilities;
+package ElBell.CocktailSpringBoot.scripts;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
